@@ -1,0 +1,6 @@
+Flask==2.3.3
+Werkzeug==2.3.7
+music21==8.3.0
+midiutil==1.2.1
+python-slugify==8.0.1
+gunicorn==21.2.0 

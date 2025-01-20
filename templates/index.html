@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Melody | Transform Your Code into Music</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600&display=swap">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #1a1a1a;
+            --accent-color: #ff9000;
+            --accent-hover: #ff6100;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 2rem;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(180deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            border-radius: 24px;
+            margin-bottom: 3rem;
+            border: 1px solid #333;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(255, 144, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .code-input {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--secondary-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 30px rgba(255, 144, 0, 0.1);
+            border: 1px solid #333;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'SF Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(255, 144, 0, 0.2);
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            background: var(--accent-color);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(255, 144, 0, 0.3);
+        }
+
+        .features {
+            margin-top: 4rem;
+            padding: 2rem;
+            background: var(--secondary-bg);
+            border-radius: 16px;
+            border: 1px solid #333;
+        }
+
+        .features h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--accent-color);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-item {
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+            box-shadow: 0 5px 15px rgba(255, 144, 0, 0.1);
+        }
+
+        .feature-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .feature-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            border-top: 1px solid #333;
+        }
+
+        .footer p {
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .hero {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>Code Melody</h1>
+            <p class="subtitle">Transform your code into beautiful musical compositions using advanced algorithms and harmonic patterns.</p>
+        </div>
+
+        <div class="code-input">
+            <form action="/convert" method="post">
+                <textarea name="code" placeholder="Paste your code here to create music..."></textarea>
+                <button type="submit">Generate Music ♪</button>
+            </form>
+        </div>
+
+        <div class="features">
+            <h2>Features</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <h3>Smart Code Reading</h3>
+                    <p>Look, your code isn't just code anymore! We actually look at how you write it - loops, functions, all that stuff - and turn it into some pretty sweet tunes. 🎵</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Not Just Random Beeps</h3>
+                    <p>Trust me, we're not just making random noises here. Your code gets turned into actual music with proper chords and everything. It's kinda magical! ✨</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Complexity = Vibes</h3>
+                    <p>Got a super complex function? That's gonna hit different than a simple loop. The more fancy your code, the spicier the beats! 🔥</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Easy Download</h3>
+                    <p>Just grab your MIDI file and boom - you can play it anywhere. Show your friends how your code sounds, they'll think you're some kind of tech wizard! 🎹</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 Code Melody. Ay caramba, why you reading dis fine print, amigo? 🤔</p>
+            <p>Blyat! Don't you have some código to write? Mucho trabajo waiting, tovarisch!</p>
+            <p>¡Oye! Stop procrastinating mi friend, your jefe is watching! Davai davai, back to work! xaxaxa</p>
+        </div>
+    </div>
+</body>
+</html> 
