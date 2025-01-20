@@ -97,15 +97,28 @@ def convert():
     
     music_stream = code_to_music(code)
     
-    with tempfile.NamedTemporaryFile(suffix='.mid', delete=False) as tmp:
+    tmp = None
+    try:
+        tmp = tempfile.NamedTemporaryFile(suffix='.mid', delete=False)
         music_stream.write('midi', fp=tmp.name)
+        tmp.close()  # Close the file before reading it
+        
         with open(tmp.name, 'rb') as f:
             midi_data = f.read()
-        os.unlink(tmp.name)
-    
-    response = Response(midi_data, mimetype='audio/midi')
-    response.headers['Content-Disposition'] = f'attachment; filename=code_music_{slugify(code[:20])}.mid'
-    return response
+            
+        response = Response(midi_data, mimetype='audio/midi')
+        response.headers['Content-Disposition'] = f'attachment; filename=code_music_{slugify(code[:20])}.mid'
+        return response
+        
+    except Exception as e:
+        return f'Error generating MIDI file: {str(e)}', 500
+        
+    finally:
+        if tmp is not None:
+            try:
+                os.unlink(tmp.name)
+            except Exception:
+                pass  # Ignore errors during cleanup
 
 app = app
 
