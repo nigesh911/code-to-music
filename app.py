@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, Response
 import os
 from slugify import slugify
 import re
 from music21 import stream, note, tempo, instrument, harmony, scale, pitch
+import tempfile
 
 app = Flask(__name__)
 
@@ -84,9 +85,6 @@ def code_to_music(code_text):
     
     return main_stream
 
-def stream_to_midi_file(music_stream, filepath):
-    music_stream.write('midi', fp=filepath)
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -99,19 +97,17 @@ def convert():
     
     music_stream = code_to_music(code)
     
-    filename = f"code_music_{slugify(code[:20])}.mid"
+    with tempfile.NamedTemporaryFile(suffix='.mid', delete=False) as tmp:
+        music_stream.write('midi', fp=tmp.name)
+        with open(tmp.name, 'rb') as f:
+            midi_data = f.read()
+        os.unlink(tmp.name)
     
-    os.makedirs('midi_files', exist_ok=True)
-    filepath = os.path.join('midi_files', filename)
-    
-    stream_to_midi_file(music_stream, filepath)
-    
-    return send_file(
-        filepath,
-        as_attachment=True,
-        download_name=filename,
-        mimetype='audio/midi'
-    )
+    response = Response(midi_data, mimetype='audio/midi')
+    response.headers['Content-Disposition'] = f'attachment; filename=code_music_{slugify(code[:20])}.mid'
+    return response
+
+app = app
 
 if __name__ == '__main__':
     app.run(debug=True) 
