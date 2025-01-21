@@ -27,7 +27,7 @@ def code_to_music(code_text):
     main_stream = stream.Stream()
     
     complexity = analyze_code_complexity(code_text)
-    mm_mark = tempo.MetronomeMark(number=int(80 * complexity))
+    mm_mark = tempo.MetronomeMark(number=int(100 * complexity))  # Increased base tempo
     main_stream.append(mm_mark)
     
     scale_notes = get_scale_notes()
@@ -38,6 +38,8 @@ def code_to_music(code_text):
     melody_part.insert(0, instrument.Piano())
     chord_part.insert(0, instrument.Piano())
     
+    # Process multiple characters at once
+    chunk_size = 4
     lines = code_text.split('\n')
     current_time = 0
     chord_names = create_chord_progression()
@@ -50,35 +52,29 @@ def code_to_music(code_text):
         indent = len(line) - len(line.lstrip())
         octave_shift = indent // 4
         
-        for char in line.strip():
-            ascii_val = ord(char)
-            note_index = ascii_val % len(scale_notes)
-            note_value = scale_notes[note_index]
+        chars = line.strip()
+        for i in range(0, len(chars), chunk_size):
+            chunk = chars[i:i+chunk_size]
             
-            note_value += octave_shift * 12
-            
-            duration_value = 'eighth'
-            if char.isupper():
-                duration_value = 'quarter'
-            elif char.isdigit():
-                duration_value = 'sixteenth'
+            for char in chunk:
+                ascii_val = ord(char)
+                note_index = ascii_val % len(scale_notes)
+                note_value = scale_notes[note_index]
                 
-            n = note.Note(note_value, quarterLength=0.5)
-            if char.isupper():
-                n.volume.velocity = 100
-            elif char.islower():
-                n.volume.velocity = 80
-            else:
-                n.volume.velocity = 60
+                note_value += octave_shift * 12
                 
-            melody_part.append(n)
-            
+                # Simplified duration logic
+                n = note.Note(note_value, quarterLength=0.25)
+                n.volume.velocity = 100 if char.isupper() else (80 if char.islower() else 60)
+                
+                melody_part.append(n)
+                
             if current_time % 4 == 0:
                 chord_name = chord_names[current_chord % len(chord_names)]
                 chord_part.append(harmony.ChordSymbol(chord_name))
                 current_chord += 1
                 
-            current_time += 1
+            current_time += len(chunk)
     
     main_stream.append(melody_part)
     main_stream.append(chord_part)
